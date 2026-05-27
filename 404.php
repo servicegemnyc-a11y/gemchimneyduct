@@ -1,8 +1,8 @@
 <?php
 /**
- * The template for displaying search results pages.
+ * The template for displaying 404 pages (not found).
  *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#search-result
+ * @link https://codex.wordpress.org/Creating_an_Error_404_Page
  *
  * @package Astra
  * @since 1.0.0
@@ -24,11 +24,7 @@ get_header(); ?>
 
 		<?php astra_primary_content_top(); ?>
 
-		<?php astra_archive_header(); ?>
-
-		<?php astra_content_loop(); ?>		
-
-		<?php astra_pagination(); ?>
+		<?php astra_404_content_template(); ?>		
 
 		<?php astra_primary_content_bottom(); ?>
 

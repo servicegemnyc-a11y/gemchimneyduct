@@ -1,8 +1,8 @@
 <?php
 /**
- * The template for displaying search results pages.
+ * The template for displaying archive pages.
  *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#search-result
+ * @link https://codex.wordpress.org/Template_Hierarchy
  *
  * @package Astra
  * @since 1.0.0
@@ -26,7 +26,7 @@ get_header(); ?>
 
 		<?php astra_archive_header(); ?>
 
-		<?php astra_content_loop(); ?>		
+		<?php astra_content_loop(); ?>
 
 		<?php astra_pagination(); ?>
 

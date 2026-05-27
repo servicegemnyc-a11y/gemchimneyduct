@@ -1,317 +1,64 @@
-<?php
 /**
- * Deactivation Survey Feedback.
- *
- * @package bsf-analytics
- */
+Theme Name: Astra
+Theme URI: https://wpastra.com/
+Author: Brainstorm Force
+Author URI: https://wpastra.com/about/?utm_source=theme_preview&utm_medium=author_link&utm_campaign=astra_theme
+Description: The Astra WordPress theme is lightning-fast and highly customizable. It has over 1 million downloads and the only theme in the world with 6,000+ five-star reviews! It’s ideal for professional web designers, solopreneurs, small businesses, eCommerce, membership sites and any type of website. It offers special features and templates so it works perfectly with all page builders like Spectra, Elementor, Beaver Builder, etc. Fast performance, clean code, mobile-first design and schema markup are all built-in, making the theme exceptionally SEO-friendly. It’s fully compatible with WooCommerce, SureCart and other eCommerce plugins and comes with lots of store-friendly features and templates. Astra also provides expert support for free users. A dedicated team of fully trained WordPress experts are on hand to help with every aspect of the theme. Try the live demo of Astra: https://zipwp.org/themes/astra/
+Version: 4.13.3
+Requires at least: 5.3
+WC requires at least: 3.0
+WC tested up to: 10.7.0
+Tested up to: 7.0
+Requires PHP: 5.3
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: astra
+Domain Path: /languages
+Tags: custom-menu, custom-logo, entertainment, one-column, two-columns, left-sidebar, e-commerce, right-sidebar, custom-colors, editor-style, featured-images, full-width-template, microformats, post-formats, rtl-language-support, theme-options, threaded-comments, translation-ready, blog
+AMP: true
 
-// Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+Astra WordPress Theme, Copyright 2020 WPAstra.
+Astra is distributed under the terms of the GNU GPL.
 
-if ( ! class_exists( 'Deactivation_Survey_Feedback' ) ) {
+Astra is based on Underscores https://underscores.me/, (C) 2012-2020 Automattic, Inc.
+Underscores is distributed under the terms of the GNU GPL v2 or later.
 
-	/**
-	 * Class Deactivation_Survey_Feedback.
-	 */
-	class Deactivation_Survey_Feedback {
+Normalizing styles have been helped along thanks to the fine work of.
+Nicolas Gallagher and Jonathan Neal https://necolas.github.com/normalize.css/
 
-		/**
-		 * Feedback URL.
-		 *
-		 * @var string
-		 */
-		private static $feedback_api_endpoint = 'api/plugin-deactivate';
+Astra icon font is based on IcoMoon-Free vector icon by Keyamoon.
+IcoMoon-Free vector icon distributed under terms of CC BY 4.0 or GPL. (https://creativecommons.org/licenses/by/4.0/ or https://www.gnu.org/licenses/gpl.html)
+Source: http://keyamoon.com/
 
-		/**
-		 * Instance
-		 *
-		 * @access private
-		 * @var object Class object.
-		 * @since 1.1.6
-		 */
-		private static $instance;
+Flexibility is a JavaScript polyfill for Flexbox By Jonathan Neal, 10up. (https://github.com/jonathantneal/flexibility)
+Licensed under MIT ( https://github.com/jonathantneal/flexibility/blob/master/LICENSE.md )
 
-		/**
-		 * Initiator
-		 *
-		 * @since 1.1.6
-		 * @return object initialized object of class.
-		 */
-		public static function get_instance() {
-			if ( ! isset( self::$instance ) ) {
-				self::$instance = new self();
-			}
-			return self::$instance;
-		}
+Screenshot image is a collage of actual sites created using the Astra WordPress Theme.
 
-		/**
-		 * Constructor
-		 */
-		public function __construct() {
-			add_action( 'admin_enqueue_scripts', array( $this, 'load_form_styles' ) );
-			add_action( 'wp_ajax_uds_plugin_deactivate_feedback', array( $this, 'send_plugin_deactivate_feedback' ) );
-		}
+Icons used in the Screenshot image are all licensed under Creative Commons ( CC BY 4.0 ) License ( https://fontawesome.com/license/free )
+https://fontawesome.com/v5.15/icons/store?style=solid
+https://fontawesome.com/v5.15/icons/shopping-cart?style=solid
+https://fontawesome.com/v5.15/icons/pen-square?style=solid
+https://fontawesome.com/v5.15/icons/user-tie?style=solid
+https://fontawesome.com/v5.15/icons/user-tie?style=solid
 
-		/**
-		 * Render feedback HTML on plugins.php admin page only.
-		 *
-		 * This function renders the feedback form HTML on the plugins.php admin page.
-		 * It takes an optional string parameter $id for the form wrapper ID and an optional array parameter $args for customizing the form.
-		 *
-		 * @since 1.1.6
-		 * @param array $args Optional. Custom arguments for the form. Defaults to an empty array.
-		 * @return void
-		 */
-		public static function show_feedback_form( array $args = array() ) {
+Illustrations used in the Screenshot images are all licensed under Creative Commons ( CC0 ) License ( https://gumroad.com/l/humaaans )
+https://websitedemos.net/web-design-agency-08/wp-content/uploads/sites/796/2021/05/standing-24.png
+https://websitedemos.net/web-design-agency-08/wp-content/uploads/sites/796/2021/05/sitting-2.png
 
-			// Return if not in admin.
-			if ( ! is_admin() ) {
-				return;
-			}
+Hand-drawn illustrations used are created by Brainstorm Force and released under Creative Commons ( CC0 ) License.
+https://websitedemos.net/web-design-agency-08/wp-content/uploads/sites/796/2021/05/girl-with-image-container.png
+https://websitedemos.net/web-design-agency-08/wp-content/uploads/sites/796/2021/05/boy-with-code-container.png
+https://websitedemos.net/web-design-agency-08/wp-content/uploads/sites/796/2021/05/web-browser.png
 
-			// Set default arguments for the feedback form.
-			$defaults = array(
-				'source'            => 'User Deactivation Survey',
-				'popup_logo'        => '',
-				'plugin_slug'       => 'user-deactivation-survey',
-				'plugin_version'    => '',
-				'popup_title'       => __( 'Quick Feedback', 'astra' ),
-				'support_url'       => 'https://brainstormforce.com/contact/',
-				'popup_reasons'     => self::get_default_reasons(),
-				'popup_description' => __( 'If you have a moment, please share why you are deactivating the plugin.', 'astra' ),
-				'show_on_screens'   => array( 'plugins' ),
-			);
+The same site as screenshot can be imported from here https://websitedemos.net/web-design-agency-08/.
 
-			// Parse the arguments with defaults.
-			$args = wp_parse_args( $args, $defaults );
-			$id = ! empty( $args['id'] ) ? sanitize_text_field( $args['id'] ) : 'uds-feedback-form--wrapper';
+For more information, refer to this document on how to create a page like in the screenshot - https://wpastra.com/docs/replicating-the-screenshot/.
 
-			// Return if not on the allowed screen.
-			if ( ! BSF_Analytics_Helper::is_allowed_screen() ) {
-				return;
-			}
+Astra default breadcrumb is based on Breadcrumb Trail by Justin Tadlock. (https://github.com/justintadlock/breadcrumb-trail)
+Breadcrumb Trail is distributed under the terms of the GNU GPL v2 or later.
 
-			// Product slug used for input fields and labels in each plugin's deactivation survey.
-			$product_slug = isset( $args['plugin_slug'] ) ? sanitize_text_field( $args['plugin_slug'] ) : 'bsf';
+Astra local fonts feature is based on Webfonts Loader by WordPress Themes Team (WPTT). (https://github.com/WPTT/webfont-loader)
+Licensed under MIT ( https://github.com/WPTT/webfont-loader/blob/master/LICENSE )
 
-			?>
-			<div id="<?php echo esc_attr( $id ); ?>" class="uds-feedback-form--wrapper" style="display: none">
-				<div class="uds-feedback-form--container">
-					<div class="uds-form-header--wrapper">
-						<div class="uds-form-title--icon-wrapper">
-							<?php if ( ! empty( $args['popup_logo'] ) ) { ?>
-								<img class="uds-icon" src="<?php echo esc_url( $args['popup_logo'] ); ?>" title="<?php echo esc_attr( $args['plugin_slug'] ); ?> <?php echo esc_attr( __( 'Icon', 'astra' ) ); ?>" />
-							<?php } ?>
-							<h2 class="uds-title"><?php echo esc_html( $args['popup_title'] ); ?></h2>
-						</div>
-						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="uds-close">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-						</svg>
-					</div>
-					<div class="uds-form-body--content">
-
-						<?php if ( ! empty( $args['popup_description'] ) ) { ?>
-							<p class="uds-form-description"><?php echo esc_html( $args['popup_description'] ); ?></p>
-						<?php } ?>
-
-						<form class="uds-feedback-form" id="uds-feedback-form" method="post">
-						<?php foreach ( $args['popup_reasons'] as $key => $value ) {
-								$input_id = $product_slug . '_uds_reason_input_' . $key;
-								?>
-								<fieldset>
-									<div class="reason">
-										<input type="radio" class="uds-reason-input" name="uds_reason_input" id="<?php echo esc_attr( $input_id ); ?>" value="<?php echo esc_attr( $key ); ?>" data-placeholder="<?php echo esc_attr( $value['placeholder'] ); ?>" data-show_cta="<?php echo esc_attr( $value['show_cta'] ); ?>" data-accept_feedback="<?php echo esc_attr( $value['accept_feedback'] ); ?>">
-										<label class="uds-reason-label" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $value['label'] ); ?></label>
-									</div>
-								</fieldset>
-							<?php } ?>
-
-							<fieldset>
-								<textarea class="uds-options-feedback hide" id="uds-options-feedback" rows="3" name="uds_options_feedback" placeholder="<?php echo esc_attr( __( 'Please tell us more details.', 'astra' ) ); ?>"></textarea>
-								<?php
-								if ( ! empty( $args['support_url'] ) ) {
-									?>
-										<p class="uds-option-feedback-cta hide">
-											<?php
-											echo wp_kses_post(
-												sprintf(
-												/* translators: %1$s: link html start, %2$s: link html end*/
-													__( 'Need help from our experts? %1$sClick here to contact us.%2$s', 'astra' ),
-													'<a href="' . esc_url( $args['support_url'] ) . '" target="_blank">',
-													'</a>'
-												)
-											);
-											?>
-										</p>
-								<?php } ?>
-							</fieldset>
-
-							<div class="uds-feedback-form-sumbit--actions">
-								<button class="button button-primary uds-feedback-submit" data-action="submit"><?php esc_html_e( 'Submit & Deactivate', 'astra' ); ?></button>
-								<button class="button button-secondary uds-feedback-skip" data-action="skip"><?php esc_html_e( 'Skip & Deactivate', 'astra' ); ?></button>
-								<input type="hidden" name="referer" value="<?php echo esc_url( get_site_url() ); ?>">
-								<input type="hidden" name="version" value="<?php echo esc_attr( $args['plugin_version'] ); ?>">
-								<input type="hidden" name="source" value="<?php echo esc_attr( $args['plugin_slug'] ); ?>">
-							</div>
-						</form>
-					</div>
-
-				</div>
-			</div>
-			<?php
-		}
-
-		/**
-		 * Load form styles.
-		 *
-		 * This function loads the necessary styles for the feedback form.
-		 *
-		 * @since 1.1.6
-		 * @return void
-		 */
-		public static function load_form_styles() {
-
-			if ( ! BSF_Analytics_Helper::is_allowed_screen() ) {
-				return;
-			}
-
-			$dir_path = BSF_ANALYTICS_URI . '/modules/deactivation-survey/';
-			$file_ext = ! SCRIPT_DEBUG ? '.min' : '';
-
-			wp_enqueue_script(
-				'uds-feedback-script',
-				$dir_path . 'assets/js/feedback' . $file_ext . '.js',
-				array( 'jquery' ),
-				BSF_ANALYTICS_VERSION,
-				true
-			);
-
-			$data = apply_filters(
-				'uds_survey_vars',
-				array(
-					'ajaxurl'        => esc_url( admin_url( 'admin-ajax.php' ) ),
-					'_ajax_nonce'    => wp_create_nonce( 'uds_plugin_deactivate_feedback' ),
-					'_current_theme' => function_exists( 'wp_get_theme' ) ? wp_get_theme()->get_template() : '',
-					'_plugin_slug'   => array(),
-				)
-			);
-
-			// Add localize JS.
-			wp_localize_script(
-				'uds-feedback-script',
-				'udsVars',
-				$data
-			);
-
-			wp_enqueue_style( 'uds-feedback-style', $dir_path . 'assets/css/feedback' . $file_ext . '.css', array(), BSF_ANALYTICS_VERSION );
-			wp_style_add_data( 'uds-feedback-style', 'rtl', 'replace' );
-		}
-
-		/**
-		 * Sends plugin deactivation feedback to the server.
-		 *
-		 * This function checks the user's permission and verifies the nonce for the request.
-		 * If the checks pass, it sends the feedback data to the server for processing.
-		 *
-		 * @return void
-		 */
-		public function send_plugin_deactivate_feedback() {
-
-			$response_data = array( 'message' => __( 'Sorry, you are not allowed to do this operation.', 'astra' ) );
-
-			/**
-			 * Check permission
-			 */
-			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_send_json_error( $response_data );
-			}
-
-			/**
-			 * Nonce verification
-			 */
-			if ( ! check_ajax_referer( 'uds_plugin_deactivate_feedback', 'security', false ) ) {
-				$response_data = array( 'message' => __( 'Nonce validation failed', 'astra' ) );
-				wp_send_json_error( $response_data );
-			}
-
-			$feedback_data = array(
-				'reason'      => isset( $_POST['reason'] ) ? sanitize_text_field( wp_unslash( $_POST['reason'] ) ) : '',
-				'feedback'    => isset( $_POST['feedback'] ) ? sanitize_text_field( wp_unslash( $_POST['feedback'] ) ) : '',
-				'domain_name' => isset( $_POST['referer'] ) ? sanitize_text_field( wp_unslash( $_POST['referer'] ) ) : '',
-				'version'     => isset( $_POST['version'] ) ? sanitize_text_field( wp_unslash( $_POST['version'] ) ) : '',
-				'plugin'      => isset( $_POST['source'] ) ? sanitize_text_field( wp_unslash( $_POST['source'] ) ) : '',
-			);
-
-			$api_args = array(
-				'body'    => wp_json_encode( $feedback_data ),
-				'headers' => BSF_Analytics_Helper::get_api_headers(),
-				'timeout' => 15, //phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
-			);
-
-			$target_url = BSF_Analytics_Helper::get_api_url() . self::$feedback_api_endpoint;
-
-			$response = wp_safe_remote_post( $target_url, $api_args );
-
-			$has_errors = BSF_Analytics_Helper::is_api_error( $response );
-
-			if ( $has_errors['error'] ) {
-				wp_send_json_error(
-					array(
-						'success' => false,
-						'message' => $has_errors['error_message'],
-					)
-				);
-			}
-
-			wp_send_json_success();
-		}
-
-		/**
-		 * Get the array of default reasons.
-		 *
-		 * @return array Default reasons.
-		 */
-		public static function get_default_reasons() {
-
-			return apply_filters(
-				'uds_default_deactivation_reasons',
-				array(
-					'temporary_deactivation' => array(
-						'label'           => esc_html__( 'This is a temporary deactivation for testing.', 'astra' ),
-						'placeholder'     => esc_html__( 'How can we assist you?', 'astra' ),
-						'show_cta'        => 'false',
-						'accept_feedback' => 'false',
-					),
-					'plugin_not_working'     => array(
-						'label'           => esc_html__( 'The plugin isn\'t working properly.', 'astra' ),
-						'placeholder'     => esc_html__( 'Please tell us more about what went wrong?', 'astra' ),
-						'show_cta'        => 'true',
-						'accept_feedback' => 'true',
-					),
-					'found_better_plugin'    => array(
-						'label'           => esc_html__( 'I found a better alternative plugin.', 'astra' ),
-						'placeholder'     => esc_html__( 'Could you please specify which plugin?', 'astra' ),
-						'show_cta'        => 'false',
-						'accept_feedback' => 'true',
-					),
-					'missing_a_feature'      => array(
-						'label'           => esc_html__( 'It\'s missing a specific feature.', 'astra' ),
-						'placeholder'     => esc_html__( 'Please tell us more about the feature.', 'astra' ),
-						'show_cta'        => 'false',
-						'accept_feedback' => 'true',
-					),
-					'other'                  => array(
-						'label'           => esc_html__( 'Other', 'astra' ),
-						'placeholder'     => esc_html__( 'Please tell us more details.', 'astra' ),
-						'show_cta'        => 'false',
-						'accept_feedback' => 'true',
-					),
-				)
-			);
-		}
-	}
-
-	Deactivation_Survey_Feedback::get_instance();
-}
+/* Note: The CSS files are loaded from assets/css/ folder. */

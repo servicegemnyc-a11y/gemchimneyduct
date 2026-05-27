@@ -1,8 +1,13 @@
 <?php
 /**
- * The template for displaying search results pages.
+ * The template for displaying all pages.
  *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#search-result
+ * This is the template that displays all pages by default.
+ * Please note that this is the WordPress construct of pages
+ * and that other 'pages' on your WordPress site may use a
+ * different template.
+ *
+ * @link https://codex.wordpress.org/Template_Hierarchy
  *
  * @package Astra
  * @since 1.0.0
@@ -24,11 +29,7 @@ get_header(); ?>
 
 		<?php astra_primary_content_top(); ?>
 
-		<?php astra_archive_header(); ?>
-
-		<?php astra_content_loop(); ?>		
-
-		<?php astra_pagination(); ?>
+		<?php astra_content_page_loop(); ?>
 
 		<?php astra_primary_content_bottom(); ?>
 
